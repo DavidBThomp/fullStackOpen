@@ -4,6 +4,7 @@ Learning from courses: https://fullstackopen.com/en/
 ## Part0
 
 ### Exercise 0.4
+```mermaid
 sequenceDiagram
     participant browser
     participant server
@@ -31,3 +32,4 @@ sequenceDiagram
     deactivate server    
 
     Note right of browser: The browser executes the callback function that renders the notes 
+```
