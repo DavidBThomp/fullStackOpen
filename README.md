@@ -4,6 +4,9 @@ Learning from courses: https://fullstackopen.com/en/
 ## Part0
 
 ### Exercise 0.4
+
+#### Sequence of Events Navigating: https://studies.cs.helsinki.fi/exampleapp/notes
+
 ```mermaid
 sequenceDiagram
     participant browser
@@ -40,3 +43,10 @@ sequenceDiagram
     
     Note right of browser: In the POST request is a payload containing content from the form
 ```
+
+### Exercise 0.5
+
+#### Sequence of Event Navigating: https://studies.cs.helsinki.fi/exampleapp/spa
+
+
+
