@@ -1,34 +1,57 @@
 import { useState } from 'react'
 
+// Credit to https://github.com/yeongjonglim/fullstackopen/blob/master/1/unicafe/src/index.js#L35 For a helping hand!
+
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}>
     {text}
   </button>
 )
 
-const Stats = (props) => {
-  if (props.total === 0) {
+const Statistic = ({text, value}) => (
+  <tr>
+  <td>{text}</td>
+  <td>{value}</td>
+  </tr>
+)
+
+const Stats = ({good, neutral, bad}) => {
+  if (good === 0 && neutral === 0 && bad === 0) {
     return (
-      <p>
-      </p>
+        <div>
+            <h2>Statistics</h2>
+            <p>No Feedback Provided</p>
+        </div>
     )
   }
-  return (
-  <p>
-    {props.text}: {props.value}
-  </p>
-  )
-}
 
-const StatsHeader = (props) => {
-  if (props.total === 0) {
-  return (
-    <h2>No User Input</h2>
-  )
+  const calculateTotal = () => good + neutral + bad
+
+  const calculateAverage = () => {
+    let total = calculateTotal();
+    return ((good - bad)/total).toFixed(1);
   }
+
+  const calculatePositive = () => {
+    let total = calculateTotal();
+    return (good/total*100).toFixed(1) + ' %';
+  }
+
   return (
-    <h2>Stats</h2>
-  )
+    <div>
+        <h2>Statistics</h2>
+        <table>
+            <tbody>
+                <Statistic text="Good" value={good} />
+                <Statistic text="Neutral" value={neutral} />
+                <Statistic text="Bad" value={bad} />
+                <Statistic text="All" value={calculateTotal()} />
+                <Statistic text="Average" value={calculateAverage()} />
+                <Statistic text="Positive" value={calculatePositive()} />
+            </tbody>
+        </table>
+    </div>
+)
 }
 
 
@@ -38,22 +61,14 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  const [total, setTotal] = useState(0)
 
-  const goodClick = () => {
-    setGood(good + 1);
-    setTotal(total + 1)
-  }
+  const goodClick = () => setGood(good + 1);
 
-  const neutralClick = () => {
-    setNeutral(neutral + 1);
-    setTotal(total + 1)
-  }
 
-  const badClick = () => {
-    setBad(bad + 1);
-    setTotal(total + 1)
-  }
+  const neutralClick = () => setNeutral(neutral + 1);
+
+
+  const badClick = () => setBad(bad + 1);
 
 
   return (
@@ -62,13 +77,7 @@ const App = () => {
       <Button handleClick={goodClick} text='Good'/>
       <Button handleClick={neutralClick} text='Neutral'/>
       <Button handleClick={badClick} text='Bad'/>
-      <StatsHeader total={total}/>
-      <Stats value={good} text='Good' total={total} />
-      <Stats value={neutral} text='Neutral' total={total} />
-      <Stats value={bad} text='Bad' total={total} />
-      <Stats value={total} text='Total' total={total}/>
-      <Stats value={(good - bad) / (good + bad + neutral)} text='Average' total={total} />
-      <Stats value={(good / (good + bad + neutral))*100} text='Positive' total={total} />
+      <Stats good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
