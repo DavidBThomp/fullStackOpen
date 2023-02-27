@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-// Credit to https://github.com/yeongjonglim/fullstackopen/blob/master/1/unicafe/src/index.js#L35 For a helping hand!
+// Credit to https://github.com/yeongjonglim/fullstackopen/blob/master/1/unicafe/src/index.js#L35 For a helping
 
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}>
