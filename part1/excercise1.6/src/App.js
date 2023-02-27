@@ -7,11 +7,9 @@ const Button = ({handleClick, text}) => (
 )
 
 const Stats = (props) => {
-  console.log(props)
-  if (isNaN(props.value)) {
+  if (props.total === 0) {
     return (
       <p>
-        {props.text}: 0
       </p>
     )
   }
@@ -19,6 +17,17 @@ const Stats = (props) => {
   <p>
     {props.text}: {props.value}
   </p>
+  )
+}
+
+const StatsHeader = (props) => {
+  if (props.total === 0) {
+  return (
+    <h2>No User Input</h2>
+  )
+  }
+  return (
+    <h2>Stats</h2>
   )
 }
 
@@ -53,25 +62,13 @@ const App = () => {
       <Button handleClick={goodClick} text='Good'/>
       <Button handleClick={neutralClick} text='Neutral'/>
       <Button handleClick={badClick} text='Bad'/>
-      <h2>Stats</h2>
-      <Stats value={good} text='Good'/>
-      <Stats value={neutral} text='Neutral'/>
-      <Stats value={bad} text='Bad'/>
-      <Stats value={total} text='Total' />
-      <Stats value={(good - bad) / (good + bad + neutral)} text='Average' />
-      <Stats value={(good / (good + bad + neutral))*100} text='Positive'/>
-
-
-
-
-
-      {/* <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bood: {bad}</p> 
-      <p>All: {total}</p>
-     <p>Average: {(good - bad) / (good + bad + neutral)}</p>
-      <p>Positive: {(good / (good + bad + neutral))*100}%</p>
-      */}
+      <StatsHeader total={total}/>
+      <Stats value={good} text='Good' total={total} />
+      <Stats value={neutral} text='Neutral' total={total} />
+      <Stats value={bad} text='Bad' total={total} />
+      <Stats value={total} text='Total' total={total}/>
+      <Stats value={(good - bad) / (good + bad + neutral)} text='Average' total={total} />
+      <Stats value={(good / (good + bad + neutral))*100} text='Positive' total={total} />
     </div>
   )
 }
