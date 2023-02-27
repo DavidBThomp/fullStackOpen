@@ -12,18 +12,27 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
 
-  const voteQuote = () => {
-    // Selected has the value of the quote they are voting for
-    console.log(votes[selected])
-    return votes[selected] += 1
-  }
 
   // Random Number between 0-7
   const randomNumber = () => Math.floor(Math.random()*(anecdotes.length))
 
-// New States
+  // New States
   const [selected, setSelected] = useState(() => randomNumber())
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+
+  const mostVotes = () => {
+    let mostQuote = '';
+    let mostVotes = 0;
+    // Loops through votes for highest amount
+    for (let i = 0; i < anecdotes.length; i++) {
+      if(votes[i] > mostVotes) {
+        mostQuote = anecdotes[i];
+        mostVotes = votes[i];
+      }
+    }
+    // Returns the quote and amount of votes
+    return {mostQuote, mostVotes};
+  }
 
   return (
     <div>
@@ -38,6 +47,9 @@ const App = () => {
           newVotes[selected] += 1;
           setVotes(newVotes);
         }}>Vote</button>
+        <h2>Most votes:</h2>
+        <p>{mostVotes().mostQuote}</p>
+        votes: {mostVotes().mostVotes}
     </div>
   )
 }
