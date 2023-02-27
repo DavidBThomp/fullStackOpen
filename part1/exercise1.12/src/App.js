@@ -12,15 +12,32 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
 
+  const voteQuote = () => {
+    // Selected has the value of the quote they are voting for
+    console.log(votes[selected])
+    return votes[selected] += 1
+  }
+
+  // Random Number between 0-7
   const randomNumber = () => Math.floor(Math.random()*(anecdotes.length))
-   
+
+// New States
   const [selected, setSelected] = useState(() => randomNumber())
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
   return (
     <div>
       {anecdotes[selected]}
       <br></br>
+      Votes: {votes[selected]}
+      <br></br>
       <button onClick={() => setSelected(randomNumber())}>Next Quote</button>
+      <button onClick={() => {
+        // Creates a new array, which is then a new array (votes)
+          const newVotes = [...votes];
+          newVotes[selected] += 1;
+          setVotes(newVotes);
+        }}>Vote</button>
     </div>
   )
 }
