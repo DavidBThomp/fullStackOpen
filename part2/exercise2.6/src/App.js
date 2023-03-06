@@ -8,6 +8,15 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
+
+    // Find if user is in database and alert and return nothing if so
+    const findSameName = persons.filter(person => person.name === newName)
+    if(findSameName.length > 0) {
+      alert(`${newName} is already in the list`)
+      setNewName('')
+      return
+    }
+
     const nameObject = {
       name: newName
     }
@@ -32,9 +41,9 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-        {persons.map((person) => {
+        {persons.map((person, i) => {
           return(
-            <p>{person.name}</p>
+            <p key={i}>{person.name}</p>
           )
         })}
     </div>
