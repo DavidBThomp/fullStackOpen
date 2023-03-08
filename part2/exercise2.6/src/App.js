@@ -26,7 +26,11 @@ const App = () => {
 
     const findSameName = persons.filter(person => person.name === newName)
     if(findSameName.length > 0) {
-      alert(`${newName} is already in the list`)
+      if(window.confirm(`${newName} is already in the list, would you like to update the number?`)) {
+        addNewNumber(findSameName)
+        setNewName('')
+        setNewPhone('')
+      }
       setNewName('')
       return
     }
@@ -36,7 +40,8 @@ const App = () => {
       phone: newPhone
     }
 
-    personsService.createPerson(nameObject)
+    personsService
+    .createPerson(nameObject)
     .then(response => {
       setPersons(persons.concat(response))
     })
@@ -70,6 +75,19 @@ const App = () => {
           console.log(`Error deleting person with id ${id}:`, error)
         })
     }
+  }
+
+  const addNewNumber = (findSameName) => {
+    const userId = findSameName[0].id
+    const findSameObject = persons.find(n => n.id === userId)
+
+    const newPhoneInput = { ...findSameObject, phone: newPhone }
+
+    personsService
+    .updateNumber(userId, newPhoneInput)
+    .then(response => {
+      setPersons(persons.map(person => person.id !== userId ? person: response))
+    })
   }
 
 
