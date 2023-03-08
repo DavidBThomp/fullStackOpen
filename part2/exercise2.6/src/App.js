@@ -57,6 +57,21 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const deletePerson = (id) => {
+    const person = persons.find(p => p.id === id)
+  
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personsService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+        .catch(error => {
+          console.log(`Error deleting person with id ${id}:`, error)
+        })
+    }
+  }
+
 
   const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
 
@@ -67,7 +82,7 @@ const App = () => {
 <br />
     <Personform formOnSubmit={addName} nameValue={newName} nameChange={addNameInput} phoneValue={newPhone} phoneChange={addPhoneInput}/>
       <h2>Numbers</h2>
-    <Persons filterSearch={filteredPersons}/>
+    <Persons filterSearch={filteredPersons} deletePerson={deletePerson}/>
     </div>
   )
 }
