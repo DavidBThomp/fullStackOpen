@@ -2,15 +2,19 @@ import { useState, useEffect } from 'react'
 
 import personsService from './services/persons'
 
+import './index.css'
+
 import Filter from './components/Filter'
 import Personform from './components/Personform'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [filter, setFilter] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
     const hook = () => {
       personsService.getPersons()
@@ -44,6 +48,10 @@ const App = () => {
     .createPerson(nameObject)
     .then(response => {
       setPersons(persons.concat(response))
+      setSuccessMessage(`${newName} has been added...`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     })
 
     setNewName('')
@@ -87,6 +95,10 @@ const App = () => {
     .updateNumber(userId, newPhoneInput)
     .then(response => {
       setPersons(persons.map(person => person.id !== userId ? person: response))
+      setSuccessMessage(`${newName} has been updated...`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     })
   }
 
@@ -96,6 +108,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
     <Filter value={filter} onChange={filterInput}/>
 <br />
     <Personform formOnSubmit={addName} nameValue={newName} nameChange={addNameInput} phoneValue={newPhone} phoneChange={addPhoneInput}/>
