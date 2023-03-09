@@ -80,7 +80,11 @@ const App = () => {
           setPersons(persons.filter(p => p.id !== id))
         })
         .catch(error => {
-          console.log(`Error deleting person with id ${id}:`, error)
+          let message = error.response.status
+          setSuccessMessage(message)
+                setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
         })
     }
   }
