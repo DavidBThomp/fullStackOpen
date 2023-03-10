@@ -28,6 +28,10 @@ let persons = [
     }
 ]
 
+// 
+// GET REQUESTS
+// 
+
 app.get('/', (req, res) => {
     res.send("<h1>Making Code</h1>")
 })
@@ -51,6 +55,57 @@ app.get('/api/persons/:id', (req, res) => {
 app.get('/info', (req, res) => {
   const time = new Date()
   res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${time}</p>`)
+})
+
+// 
+// DELETE REQUESTS
+// 
+
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  persons = persons.filter(person => person.id !== id)
+
+res.status(204).end()
+})
+
+// 
+// POST REQUESTS
+// 
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+
+  personExists = () => {
+    return persons.find(n => n.name === body.name)
+  }
+
+  console.log(personExists())
+
+  if (!body.name || !body.number){
+    return res.status(400).json({
+      error: 'No Name or Number'
+    })
+  }
+
+  if(personExists()) {
+    return res.status(400).json({
+      error: 'User already exists'
+    })
+  }
+
+  const randomId = () => {
+    return Math.floor(Math.random() * 99999)
+  }
+
+  const person = { 
+      "id": randomId(),
+      "name": body.name || "New Person", 
+      "number": body.number || "39-23-6423122"
+    }
+
+  persons = persons.concat(person)
+  
+  res.json(person)
 })
 
 const PORT = 3001
