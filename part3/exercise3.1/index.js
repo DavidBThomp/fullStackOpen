@@ -1,9 +1,27 @@
 const express = require('express')
+const morgan = require('morgan')
 
 const app = express()
 
 // Built in JSON parser
 app.use(express.json())
+
+// morgan Data Log
+app.use(
+morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    tokens.post(req, res), '<-- Data'
+
+  ].join(' ')
+})
+)
+
+morgan.token('post', function (req, res) { return JSON.stringify(req.body) })
 
 let persons = [
     { 
@@ -78,8 +96,6 @@ app.post('/api/persons', (req, res) => {
   personExists = () => {
     return persons.find(n => n.name === body.name)
   }
-
-  console.log(personExists())
 
   if (!body.name || !body.number){
     return res.status(400).json({
