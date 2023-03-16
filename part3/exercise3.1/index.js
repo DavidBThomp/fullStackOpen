@@ -10,6 +10,9 @@ app.use(express.json())
 // Cross Orgin Helper
 app.use(cors())
 
+// Static Build for base
+app.use(express.static('build'))
+
 // morgan Data Log
 app.use(
 morgan(function (tokens, req, res) {
@@ -101,7 +104,7 @@ app.post('/api/persons', (req, res) => {
     return persons.find(n => n.name === body.name)
   }
 
-  if (!body.name || !body.number){
+  if (!body.name || !body.phone){
     return res.status(400).json({
       error: 'No Name or Number'
     })
@@ -120,7 +123,7 @@ app.post('/api/persons', (req, res) => {
   const person = { 
       "id": randomId(),
       "name": body.name || "New Person", 
-      "number": body.number || "39-23-6423122"
+      "phone": body.phone || "39-23-6423122"
     }
 
   persons = persons.concat(person)
@@ -128,7 +131,7 @@ app.post('/api/persons', (req, res) => {
   res.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
