@@ -24,7 +24,7 @@ const Note = mongoose.model('Note', noteSchema)
 // Finding notes with query
 // 
 
-Note.find({ important: false }).then(result => {
+Note.find({}).then(result => {
     result.forEach(note => {
       console.log(note)
     })
