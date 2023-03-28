@@ -1,11 +1,14 @@
-import Person from './Person'
-
-const Persons = ({ filterSearch, deletePerson }) => {
+const Persons = ({ persons, removePerson }) => {
   return (
     <div>
-      {filterSearch.map(person => (
-        <Person key={person.id} person={person} deletePerson={() => deletePerson(person.id)} />
-      ))}
+      {persons.map(person =>
+        <p key={person.id}>
+          {person.name} {person.number}
+          <button onClick={() => removePerson(person)}>
+            delete
+          </button>
+        </p>
+      )}
     </div>
   )
 }

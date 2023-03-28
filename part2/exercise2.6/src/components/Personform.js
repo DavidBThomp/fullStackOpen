@@ -1,17 +1,19 @@
-const Personform = ({formOnSubmit, nameValue, nameChange, phoneValue, phoneChange}) => {
-    return (
-        <form onSubmit={formOnSubmit}>
-        <div>
-          name: <input value={nameValue} onChange={nameChange}/>
-        </div>
-        <div>
-          Phone Number: <input type={'tel'} value={phoneValue} onChange={phoneChange} />
-          </div>
-        <div>
-          <button>add</button>
-        </div>
-      </form>
-    )
+const PersonForm = ({addPerson, newName, newNumber, setNewName, setNewNumber }) => {
+  return (
+    <form onSubmit={addPerson}>
+      <div>
+        name: 
+        <input value={newName} onChange={({ target }) => setNewName(target.value)} />
+      </div>
+      <div>
+        number: 
+        <input value={newNumber} onChange={({ target }) => setNewNumber(target.value)} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
 }
 
-export default Personform
+export default PersonForm

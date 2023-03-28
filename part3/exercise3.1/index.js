@@ -1,6 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+require('dotenv').config()
+
+const phoneBook = require('./models/phoneBook')
 
 const app = express()
 
@@ -31,38 +34,16 @@ morgan(function (tokens, req, res) {
 morgan.token('post', function (req, res) { return JSON.stringify(req.body) })
 
 let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "phone": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "phone": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "phone": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "phone": "39-23-6423122"
-    }
 ]
 
 // 
 // GET REQUESTS
 // 
 
-app.get('/', (req, res) => {
-    res.send("<h1>Making Code</h1>")
-})
-
 app.get('/api/persons', (req, res) => {
+  phoneBook.find({}).then(persons => {
     res.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -100,35 +81,18 @@ res.status(204).end()
 app.post('/api/persons', (req, res) => {
   const body = req.body
 
-  personExists = () => {
-    return persons.find(n => n.name === body.name)
+  if (body.name === undefined) {
+    return res.status(400).json({ error: 'content missing' })
   }
 
-  if (!body.name || !body.phone){
-    return res.status(400).json({
-      error: 'No Name or Number'
-    })
-  }
+  const person = new phoneBook({
+    name: body.name,
+    number: body.number || false,
+  })
 
-  if(personExists()) {
-    return res.status(400).json({
-      error: 'User already exists'
-    })
-  }
-
-  const randomId = () => {
-    return Math.floor(Math.random() * 99999)
-  }
-
-  const person = { 
-      "id": randomId(),
-      "name": body.name || "New Person", 
-      "phone": body.phone || "39-23-6423122"
-    }
-
-  persons = persons.concat(person)
-  
-  res.json(person)
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
 })
 
 const PORT = process.env.PORT || 3001

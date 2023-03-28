@@ -17,8 +17,8 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const numberSchema = new mongoose.Schema({
-  phoneName: String,
-  phoneNumber: String,
+  name: String,
+  number: String,
 })
 
 const Number = mongoose.model('Number', numberSchema)
@@ -36,8 +36,8 @@ const Number = mongoose.model('Number', numberSchema)
 
 if (phoneNameArg && phoneNumberArg !== undefined) {
 const number = new Number({
-  phoneName: phoneNameArg,
-  phoneNumber: phoneNumberArg,
+  name: phoneNameArg,
+  number: phoneNumberArg,
 })
 
 number.save().then(result => {
