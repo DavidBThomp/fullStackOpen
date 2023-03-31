@@ -1,0 +1,2 @@
+DELETE http://localhost:3001/api/notes/641f52c8e033f57a5ab42dc1
+Content-Type: application/json
