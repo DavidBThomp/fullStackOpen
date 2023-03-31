@@ -47,31 +47,34 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(person => person.id === id)
-
-  if (!person){
-    return res.status(400).json({ 
-      error: 'No person found' 
-  })}
-
-  res.json(person)
+  phoneBook.findById(req.params.id)
+  .then(phone => {
+    if (phone) {
+      res.json(phone)
+    } else {
+      res.status(404).end()
+    }
+  })
+  .catch(error => next(error))
 })
 
 app.get('/info', (req, res) => {
   const time = new Date()
+  phoneBook.find({}).then(persons => {
   res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${time}</p>`)
+})
 })
 
 // 
 // DELETE REQUESTS
 // 
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  persons = persons.filter(person => person.id !== id)
-
-res.status(204).end()
+app.delete('/api/persons/:id', (req, res, next) => {
+  phoneBook.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 // 
@@ -85,6 +88,8 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({ error: 'content missing' })
   }
 
+  
+
   const person = new phoneBook({
     name: body.name,
     number: body.number || false,
@@ -94,6 +99,44 @@ app.post('/api/persons', (req, res) => {
     res.json(savedPerson)
   })
 })
+
+// 
+// PUT REQUESTS
+// If the user enters the samme name the number will be update
+// 
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number || false,
+  }
+
+  phoneBook.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPhone => {
+      res.json(updatedPhone)
+    })
+    .catch(error => next(error))
+})
+
+
+// 
+// Error Handling Middleware
+// 
+
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+// this has to be the last loaded middleware.
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
